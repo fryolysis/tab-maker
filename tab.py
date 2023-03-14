@@ -1,11 +1,34 @@
 import heapq
 from dataclasses import dataclass
+from mido import MidiFile
+
+# Midi Note 40 corresponds to E2
 
 HAND_COVERAGE = 4
 FRETS_PER_STRING = 12
-open_strings = [0,5,10,15,19,24] # standard tuning
+open_strings = [i+40 for i in [0,5,10,15,19,24]] # standard tuning
 
-melody = [18,19,22,23,25,26,29,30]
+
+@dataclass()
+class NoteEvent:
+    note: int
+    is_on: bool
+
+tune = []
+
+# input from midi file
+midi_file = MidiFile('test.mid')
+
+assert len(midi_file.tracks) == 1
+track = midi_file.tracks[0]
+
+for msg in track:
+    if msg.type == 'note_on' and msg.velocity == 0:
+        tune.append(NoteEvent(msg.note, False))
+    elif msg.type == 'note_on':
+        tune.append(NoteEvent(msg.note, True))
+    elif msg.type == 'note_off':
+        tune.append(NoteEvent(msg.note, False))
 
 
 @dataclass(order=True)
