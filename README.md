@@ -19,9 +19,5 @@ In the following, we concern only 'note_on' and 'note_off' events in the input. 
 
 On the $i^{th}$ iteration of the loop:
 1. Check if it is an eligible position. If not, move on to the next iteration.
-2. Compute the set of all hand positions that can play the part of the tune since the last eligible position.
-3. Construct a set $S_i$ of tuples $(h_{ij}, r_{ij}, p_i)$ where $h_{ij}$ are the hand positions computed in step 2, $p_i$ is a pointer to the tuple $t \in S_{i'}$ where $i'$ is the previous eligible position and $t = (h,r,p)$ is the tuple with the lowest rank $r$. Set $r_{ij} = r$ if $h_{ij} = h$ and $r_{ij} = r + 1$ else. Set $r_{ij} = 0$ and $p_i = null$ if the previous eligible position is 0.
-
-At the end of the loop, backtrack using the pointers starting from the tuple with the lowest rank in $S_l$. Rank corresponds to the number of total horizontal hand shifts since the beginning, so during the backtracking one can determine at which instants of the tune hand positions are changed.
-
-Note that $S_0$ does not contain any element, and if there is some empty set $S_k$ with $k>0$ it indicates the impossibility of playing the tune.
+2. Compute the set of all hand positions $H_i$ that can play the part of the tune since the last eligible position, starting with the set of notes still playing at the last eligible position.
+3. Let $i'$ be the previous eligible position. If $H_i \cap H_{i'}$ is not empty, assign the intersection set to $H_i$. Else, mark $i$ to be a hand move position, and pick $h \in H_i$ and $h' \in H_{i'}$ such that $|h-h'|$ is minimized.
